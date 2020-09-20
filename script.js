@@ -17,10 +17,21 @@ function displayCurrentDateTime() {
 var $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
 displayCurrentDateTime();
 
+// Function check moment
+function checkMoment(theTime){
+
+    console.log("checking "+theTime);
+
+    if (moment().isBefore(moment({ hour:theTime, minute:0 }))) {
+        // do something
+        return "past";
+    }
+}
+
+
 // Add the number of rows based off times array
 for (var i = 0; i < times.length; i++) {
 
-    console.log("Creating new row " + i);
     var $newRow = $("<div>");
     $newRow.attr("class", "row time-block")
 
@@ -31,11 +42,14 @@ for (var i = 0; i < times.length; i++) {
     $newTimeElement = $("<span>");
     $newTimeElement.attr("style", "display: table-cell; vertical-align: middle;")
     $newTimeElement.text(times[i]);
+
+    console.log(parseFloat(times[i]));
     
     $newTime.append($newTimeElement);
     
     var $newDescription = $("<div>");
-    $newDescription.attr("class", "col-10 past p-0");
+    $newDescription.attr("class", "col-10 p-0");
+    $newDescription.addClass(checkMoment(parseFloat(times[i])))
     
     var $newTextArea = $("<input>");
     $newTextArea.attr("type", "text");
@@ -59,3 +73,4 @@ for (var i = 0; i < times.length; i++) {
     $theContainer.append($newRow);
 
 }
+
