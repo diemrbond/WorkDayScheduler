@@ -25,30 +25,32 @@ for (var i = 0; i < times.length; i++) {
     $newRow.attr("class", "row time-block")
 
     var $newTime = $("<div>");
-    $newTime.attr("class", "col-1 hour v-align");
+    $newTime.attr("class", "col-1 hour");
     $newTime.attr("style", "width: 100%; height: 100%; display: table")
     
     $newTimeElement = $("<span>");
     $newTimeElement.attr("style", "display: table-cell; vertical-align: middle;")
     $newTimeElement.text(times[i]);
-
+    
     $newTime.append($newTimeElement);
-
+    
     var $newDescription = $("<div>");
     $newDescription.attr("class", "col-10 past p-0");
-
+    
     var $newTextArea = $("<input>");
     $newTextArea.attr("type", "text");
     $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
     $newTextArea.attr("class", "textarea");
-
+    
     $newDescription.append($newTextArea);
-
+    
     var $newSave = $("<div>");
     $newSave.attr("class", "col-1 saveBtn");
-
+    $newSave.attr("style", "width: 100%; height: 100%; display: table")
+    
     var $newSaveIcon = $("<i>");
     $newSaveIcon.attr("class", "fas fa-save");
+    $newSaveIcon.attr("style", "display: table-cell; vertical-align: middle;") 
     $newSave.append($newSaveIcon);
 
     $newRow.append($newTime);
