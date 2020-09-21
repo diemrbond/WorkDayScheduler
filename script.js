@@ -4,7 +4,7 @@ var $theContainer = $('.container');
 
 // Variables
 var times = [["9", "AM"], ["10", "AM"], ["11", "AM"], ["12", "PM"], ["1", "PM"], ["2", "PM"], ["3", "PM"], ["4", "PM"], ["5", "PM"]];
-
+var recordedEntries = [];
 
 
 
@@ -42,7 +42,46 @@ function checkMoment(theTime, ampm) {
 
 }
 
+function retrieveStoredCalendar() {
+
+    // Check if the calendar has been stored to the localStorage and retrieve
+    var checkExistingCalendar = localStorage.getItem("calendarEntries");
+    if (checkExistingCalendar != null) {
+        recordedEntries = JSON.parse(checkExistingCalendar);
+    }
+    // Otherwise, set to the default empty array
+    else {
+        for (var i = 0; i < times.length; i++) {
+            recordedEntries.push("");
+        }
+    }
+    // Console log the existing entries
+    console.log(recordedEntries);
+}
+
+function getCalendarEvent($which){
+    if (recordedEntries != undefined){
+        return recordedEntries[$which];
+    }
+    return false;
+}
+
+function addCalendarToStorage() {
+
+    var calendarEntries = JSON.stringify(recordedEntries);
+    localStorage.setItem("calendarEntries", calendarEntries);
+}
+
+function addCalendarEvent($id, $which){
+
+    // Add this event to the array
+    recordedEntries[$id-1] = $which;
+}
+
 function setupCalendar() {
+
+    // Retrieve the stored calendar
+    retrieveStoredCalendar()
 
     // Reset the container
     $theContainer.empty();
@@ -64,7 +103,7 @@ function setupCalendar() {
         $newTimeElement.attr("style", "display: table-cell; vertical-align: middle;")
         $newTimeElement.text(times[i][0] + times[i][1]);
 
-        // Create tbe text entry area div
+        // Create the text entry area div
         var $newDescription = $("<div>");
         $newDescription.attr("class", "col-10 p-0");
         $newDescription.addClass(checkMoment(times[i][0], times[i][1]))
@@ -75,6 +114,9 @@ function setupCalendar() {
         $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
         $newTextArea.attr("class", "textarea");
         $newTextArea.attr("id", "input" + (i + 1));
+
+        // Retrieve stored entries
+        $newTextArea.val(getCalendarEvent(i));
 
         // Create the save button div
         var $newSave = $("<div>");
@@ -111,9 +153,16 @@ $(".fa-save").bind("click", function () {
 
     // Get the text area based off the id
     var $textInput = $('#input' + $id);
+    // Get the text input
+    var $trimmedText = $textInput.val().trim()
 
     // Check if any data was entered, and if so save the data
-    if ($textInput.val().trim() != "") {
-        console.log("Data to save");
+    if ($trimmedText != "" && $id != undefined){
+
+        // Add this calender entry to array
+        addCalendarEvent($id, $trimmedText);
+
+        // Add all entries to storage
+        addCalendarToStorage();
     }
 })
