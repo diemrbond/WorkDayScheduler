@@ -33,7 +33,7 @@ function checkMoment(theTime, ampm) {
     if (moment($currentTime).isBefore($startTime)) {
         return "future";
     }
-    else if (moment($currentTime).isBetween($startTime, $endTime)) {
+    else if ((moment($currentTime).isBetween($startTime, $endTime)) || (moment($currentTime).isSame($startTime, $endTime))) {
         return "present";
     }
     else if (moment($currentTime).isAfter($startTime)) {
@@ -43,6 +43,9 @@ function checkMoment(theTime, ampm) {
 }
 
 function setupCalendar() {
+
+    // Reset the container
+    $theContainer.empty();
 
     // Add the number of rows based off times array
     for (var i = 0; i < times.length; i++) {
@@ -71,6 +74,7 @@ function setupCalendar() {
         $newTextArea.attr("type", "text");
         $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
         $newTextArea.attr("class", "textarea");
+        $newTextArea.attr("id", "input" + (i + 1));
 
         // Create the save button div
         var $newSave = $("<div>");
@@ -81,6 +85,7 @@ function setupCalendar() {
         var $newSaveIcon = $("<i>");
         $newSaveIcon.attr("class", "fas fa-save");
         $newSaveIcon.attr("style", "display: table-cell; vertical-align: middle;")
+        $newSaveIcon.attr("data-id", (i + 1));
         $newSaveIcon.css("cursor", "pointer");
 
         // Append everything to the container
@@ -95,15 +100,20 @@ function setupCalendar() {
     }
 }
 
-// jQuery(function ($) {
-//     $('.fa-save').bind('change', function () {
-
-//         //textarea-1
-//         var id = $(this).find('data-id').val();
-
-//         console.log($('#' + id).val());
-//     });
-// });
-
 // Let's get it started in here
 setupCalendar();
+
+// Add event listeners
+$(".fa-save").bind("click", function () {
+
+    // Check which save button was pressed
+    var $id = $(this).data("id");
+
+    // Get the text area based off the id
+    var $textInput = $('#input' + $id);
+
+    // Check if any data was entered, and if so save the data
+    if ($textInput.val().trim() != "") {
+        console.log("Data to save");
+    }
+})
