@@ -8,22 +8,29 @@ var $recordedEntries = [];
 var $currentHour;
 var $previousHour;
 
+// Function to update the calendar colours when the time changes
 function updateCalendar() {
-    console.log("[SYSTEM] Your time changed hours, update the calendar!");
-
-    // Update the colours
+    
+    // Update the colours when the time changes from the previous hour
     var $changeColours = $(".colours");
-    $.each($changeColours, function (which) {
+    // Loop through each colours class
+    $.each($changeColours, function () {
+        // Retrieve the id
         var $adjustColor = $(this).data("id");
+        // Set the colorus back to the default
         $(this).attr("class", "col-10 p-0 colours");
+        // Readd the custom colour class of past, present, future
         $(this).addClass(checkMoment($times[$adjustColor-1][0], $times[$adjustColor-1][1]));
     })
 
+    // Update the previousHour to the new currentHour
     $previousHour = $currentHour;
 }
 
-// Set the current date and time
+// Function to set the current date and time
 function displayCurrentDateTime() {
+
+    // Using moment, get the current date and set the time on the page
     var $currentDate = moment().format('Do MMMM YYYY, h:mm:ss a');
     $currentDayElement.text($currentDate);
 
@@ -34,23 +41,18 @@ function displayCurrentDateTime() {
     }
 }
 
-
-// Interval to call the displayCurrentDateTime function every second
-var $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
-displayCurrentDateTime();
-
-// Function check moment
+// Function to check moment and return the correct class
 function checkMoment(theTime, ampm) {
 
     // Get the current moment
     var $getCurrentTime = moment().format('LT');
     // Convert the moment into the correct format
     var $currentTime = moment($getCurrentTime, "HH:mm:ss a");
-    // Create the time range moments
+    // Create the time range moments to compare with
     var $startTime = moment(theTime + ':00 ' + ampm, "HH:mm:ss a");
     var $endTime = moment(theTime + ':59 ' + ampm, "HH:mm:ss a");
 
-    // Check if the current moment falls within this range of before, within, after
+    // Check if the current moment falls within this range of before, within|same, after
     if (moment($currentTime).isBefore($startTime)) {
         return "future";
     }
@@ -63,6 +65,7 @@ function checkMoment(theTime, ampm) {
 
 }
 
+// Function to retrieve the calendar data from local storage
 function retrieveStoredCalendar() {
 
     // Check if the calendar has been stored to the localStorage and retrieve
@@ -77,28 +80,36 @@ function retrieveStoredCalendar() {
         }
     }
     // Console log the existing entries
-    console.log($recordedEntries);
+    console.log("[SYSTEM] Saved data: "+$recordedEntries);
 }
 
+// Function to return the current calendar entry
 function getCalendarEvent($which) {
+
+    // Check if the recordedEntries array is undefined
     if ($recordedEntries != undefined) {
         return $recordedEntries[$which];
     }
-    return false;
+    // Otherwise return empty string
+    return "";
 }
 
+// Function to add the current calendar data to local storage
 function addCalendarToStorage() {
 
     var calendarEntries = JSON.stringify($recordedEntries);
     localStorage.setItem("calendarEntries", calendarEntries);
 }
 
+// Function to add the input calendar entry to the array
 function addCalendarEvent($id, $which) {
 
     // Add this event to the array
     $recordedEntries[$id - 1] = $which;
 }
 
+// Function to setup the calendar, create the rows, etc
+// Should only be run once, but will reset container if run again
 function setupCalendar() {
 
     // Retrieve the stored calendar
@@ -164,10 +175,16 @@ function setupCalendar() {
     }
 }
 
+// Interval to call the displayCurrentDateTime function every second
+var $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
+
+// Check and display the current date time on page load
+displayCurrentDateTime();
+
 // Let's get it started in here
 setupCalendar();
 
-// Add event listeners
+// Event listeners
 $(".fa-save").bind("click", function () {
 
     // Check which save button was pressed
