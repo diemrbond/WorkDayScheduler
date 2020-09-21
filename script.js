@@ -10,17 +10,19 @@ var $previousHour;
 
 // Function to update the calendar colours when the time changes
 function updateCalendar() {
-    
+
     // Update the colours when the time changes from the previous hour
     var $changeColours = $(".colours");
+
     // Loop through each colours class
+    // Wont run on first run, as $changeColours is empty array
     $.each($changeColours, function () {
         // Retrieve the id
-        var $adjustColor = $(this).data("id");
+        var $adjustColor = $(this).attr("id");
         // Set the colorus back to the default
         $(this).attr("class", "col-10 p-0 colours");
-        // Readd the custom colour class of past, present, future
-        $(this).addClass(checkMoment($times[$adjustColor-1][0], $times[$adjustColor-1][1]));
+        // Re-add the custom colour class of past, present, future
+        $(this).addClass(checkMoment($times[$adjustColor - 1][0], $times[$adjustColor - 1][1]));
     })
 
     // Update the previousHour to the new currentHour
@@ -62,7 +64,6 @@ function checkMoment(theTime, ampm) {
     else if (moment($currentTime).isAfter($startTime)) {
         return "past";
     }
-
 }
 
 // Function to retrieve the calendar data from local storage
@@ -80,7 +81,7 @@ function retrieveStoredCalendar() {
         }
     }
     // Console log the existing entries
-    console.log("[SYSTEM] Saved data: "+$recordedEntries);
+    console.log("[SYSTEM] Retrieving saved data: " + $recordedEntries);
 }
 
 // Function to return the current calendar entry
@@ -99,6 +100,7 @@ function addCalendarToStorage() {
 
     var calendarEntries = JSON.stringify($recordedEntries);
     localStorage.setItem("calendarEntries", calendarEntries);
+    console.log("[SYSTEM] Added calender to local storage: " + calendarEntries);
 }
 
 // Function to add the input calendar entry to the array
@@ -106,11 +108,14 @@ function addCalendarEvent($id, $which) {
 
     // Add this event to the array
     $recordedEntries[$id - 1] = $which;
+    console.log("[SYSTEM] Added at id " + ($id - 1) + ":" + $which);
 }
 
 // Function to setup the calendar, create the rows, etc
 // Should only be run once, but will reset container if run again
 function setupCalendar() {
+
+    console.log("[SYSTEM] Setting up the Calendar");
 
     // Retrieve the stored calendar
     retrieveStoredCalendar()
@@ -188,17 +193,16 @@ setupCalendar();
 $(".fa-save").bind("click", function () {
 
     // Check which save button was pressed
-    var $id = $(this).data("id");
-    console.log("id: "+$id);
+    var $id = $(this).attr("id");
     
     // Get the text area based off the id
     var $textInput = $('#input' + $id);
-    console.log($textInput);
+
     // Get the text input
-    var $trimmedText = $textInput.val().trim()
+    var $trimmedText = $textInput.val().trim();
 
     // Check if any data was entered, and if so save the data
-    if ($trimmedText != "" && $id != undefined) {
+    if ($trimmedText != undefined && $id != undefined) {
 
         // Add this calender entry to array
         addCalendarEvent($id, $trimmedText);
