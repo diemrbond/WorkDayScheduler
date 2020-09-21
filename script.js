@@ -3,7 +3,8 @@ var $currentDayElement = $('#currentDay');
 var $theContainer = $('.container');
 
 // Variables
-var times = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
+var times = [["9", "AM"], ["10", "AM"], ["11", "AM"], ["12", "PM"], ["1", "PM"], ["2", "PM"], ["3", "PM"], ["4", "PM"], ["5", "PM"]];
+
 
 
 
@@ -18,59 +19,91 @@ var $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
 displayCurrentDateTime();
 
 // Function check moment
-function checkMoment(theTime){
+function checkMoment(theTime, ampm) {
 
-    console.log("checking "+theTime);
+    // Get the current moment
+    var $getCurrentTime = moment().format('LT');
+    // Convert the moment into the correct format
+    var $currentTime = moment($getCurrentTime, "HH:mm:ss a");
+    // Create the time range moments
+    var $startTime = moment(theTime + ':00 ' + ampm, "HH:mm:ss a");
+    var $endTime = moment(theTime + ':59 ' + ampm, "HH:mm:ss a");
 
-    if (moment().isBefore(moment({ hour:theTime, minute:0 }))) {
-        // do something
+    // Check if the current moment falls within this range of before, within, after
+    if (moment($currentTime).isBefore($startTime)) {
+        return "future";
+    }
+    else if (moment($currentTime).isBetween($startTime, $endTime)) {
+        return "present";
+    }
+    else if (moment($currentTime).isAfter($startTime)) {
         return "past";
+    }
+
+}
+
+function setupCalendar() {
+
+    // Add the number of rows based off times array
+    for (var i = 0; i < times.length; i++) {
+
+        // Create the time-block row
+        var $newRow = $("<div>");
+        $newRow.attr("class", "row time-block")
+
+        // Create the time display div
+        var $newTime = $("<div>");
+        $newTime.attr("class", "col-1 hour");
+        $newTime.attr("style", "width: 100%; height: 100%; display: table")
+
+        // Add the time display as a span to the div
+        $newTimeElement = $("<span>");
+        $newTimeElement.attr("style", "display: table-cell; vertical-align: middle;")
+        $newTimeElement.text(times[i][0] + times[i][1]);
+
+        // Create tbe text entry area div
+        var $newDescription = $("<div>");
+        $newDescription.attr("class", "col-10 p-0");
+        $newDescription.addClass(checkMoment(times[i][0], times[i][1]))
+
+        // Create the text input area
+        var $newTextArea = $("<input>");
+        $newTextArea.attr("type", "text");
+        $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
+        $newTextArea.attr("class", "textarea");
+
+        // Create the save button div
+        var $newSave = $("<div>");
+        $newSave.attr("class", "col-1 saveBtn");
+        $newSave.attr("style", "width: 100%; height: 100%; display: table")
+
+        // Craete the save icon
+        var $newSaveIcon = $("<i>");
+        $newSaveIcon.attr("class", "fas fa-save");
+        $newSaveIcon.attr("style", "display: table-cell; vertical-align: middle;")
+        $newSaveIcon.css("cursor", "pointer");
+
+        // Append everything to the container
+        $newTime.append($newTimeElement);
+        $newRow.append($newTime);
+        $newDescription.append($newTextArea);
+        $newRow.append($newDescription);
+        $newSave.append($newSaveIcon);
+        $newRow.append($newSave);
+        $theContainer.append($newRow);
+
     }
 }
 
+// jQuery(function ($) {
+//     $('.fa-save').bind('change', function () {
 
-// Add the number of rows based off times array
-for (var i = 0; i < times.length; i++) {
+//         //textarea-1
+//         var id = $(this).find('data-id').val();
 
-    var $newRow = $("<div>");
-    $newRow.attr("class", "row time-block")
+//         console.log($('#' + id).val());
+//     });
+// });
 
-    var $newTime = $("<div>");
-    $newTime.attr("class", "col-1 hour");
-    $newTime.attr("style", "width: 100%; height: 100%; display: table")
-    
-    $newTimeElement = $("<span>");
-    $newTimeElement.attr("style", "display: table-cell; vertical-align: middle;")
-    $newTimeElement.text(times[i]);
-
-    console.log(parseFloat(times[i]));
-    
-    $newTime.append($newTimeElement);
-    
-    var $newDescription = $("<div>");
-    $newDescription.attr("class", "col-10 p-0");
-    $newDescription.addClass(checkMoment(parseFloat(times[i])))
-    
-    var $newTextArea = $("<input>");
-    $newTextArea.attr("type", "text");
-    $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
-    $newTextArea.attr("class", "textarea");
-    
-    $newDescription.append($newTextArea);
-    
-    var $newSave = $("<div>");
-    $newSave.attr("class", "col-1 saveBtn");
-    $newSave.attr("style", "width: 100%; height: 100%; display: table")
-    
-    var $newSaveIcon = $("<i>");
-    $newSaveIcon.attr("class", "fas fa-save");
-    $newSaveIcon.attr("style", "display: table-cell; vertical-align: middle;") 
-    $newSave.append($newSaveIcon);
-
-    $newRow.append($newTime);
-    $newRow.append($newDescription);
-    $newRow.append($newSave);
-    $theContainer.append($newRow);
-
-}
-
+// Let's get it started in here
+setupCalendar();
