@@ -139,14 +139,14 @@ function setupCalendar() {
         var $newDescription = $("<div>");
         $newDescription.attr("class", "col-10 p-0 colours");
         $newDescription.addClass(checkMoment($times[i][0], $times[i][1]))
-        $newDescription.data("id", (i + 1));
+        $newDescription.attr("id", (i + 1));
 
         // Create the text input area
         var $newTextArea = $("<input>");
         $newTextArea.attr("type", "text");
         $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
         $newTextArea.attr("class", "textarea");
-        $newTextArea.data("id", "input" + (i + 1));
+        $newTextArea.attr("id", "input" + (i + 1));
 
         // Retrieve stored entries
         $newTextArea.val(getCalendarEvent(i));
@@ -160,7 +160,7 @@ function setupCalendar() {
         var $newSaveIcon = $("<i>");
         $newSaveIcon.attr("class", "fas fa-save");
         $newSaveIcon.attr("style", "display: table-cell; vertical-align: middle;")
-        $newSaveIcon.data("id", (i + 1));
+        $newSaveIcon.attr("id", (i + 1));
         $newSaveIcon.css("cursor", "pointer");
 
         // Append everything to the container
@@ -189,9 +189,11 @@ $(".fa-save").bind("click", function () {
 
     // Check which save button was pressed
     var $id = $(this).data("id");
-
+    console.log("id: "+$id);
+    
     // Get the text area based off the id
     var $textInput = $('#input' + $id);
+    console.log($textInput);
     // Get the text input
     var $trimmedText = $textInput.val().trim()
 
