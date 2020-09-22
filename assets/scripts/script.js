@@ -20,7 +20,7 @@ function updateCalendar() {
         // Retrieve the id
         var $adjustColor = $(this).attr("id");
         // Set the colorus back to the default
-        $(this).attr("class", "col-7 col-lg-10 p-0 colours");
+        $(this).attr("class", "col-7 col-sm-8 col-lg-10 p-0 colours");
         // Re-add the custom colour class of past, present, future
         $(this).addClass(checkMoment($times[$adjustColor - 1][0], $times[$adjustColor - 1][1]));
     })
@@ -132,7 +132,7 @@ function setupCalendar() {
 
         // Create the time display div
         var $newTime = $("<div>");
-        $newTime.attr("class", "col-3 col-lg-1 hour");
+        $newTime.attr("class", "col-3 col-sm-2 col-lg-1 hour");
         $newTime.attr("style", "width: 100%; height: 100%; display: table")
 
         // Add the time display as a span to the div
@@ -142,7 +142,7 @@ function setupCalendar() {
 
         // Create the text entry area div
         var $newDescription = $("<div>");
-        $newDescription.attr("class", "col-7 col-lg-10 p-0 colours");
+        $newDescription.attr("class", "col-7 col-sm-8 col-lg-10 p-0 colours");
         $newDescription.addClass(checkMoment($times[i][0], $times[i][1]))
         $newDescription.attr("id", (i + 1));
 
