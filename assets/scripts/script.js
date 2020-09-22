@@ -20,7 +20,7 @@ function updateCalendar() {
         // Retrieve the id
         var $adjustColor = $(this).attr("id");
         // Set the colorus back to the default
-        $(this).attr("class", "col-10 p-0 colours");
+        $(this).attr("class", "col-8 col-lg-10 p-0 colours");
         // Re-add the custom colour class of past, present, future
         $(this).addClass(checkMoment($times[$adjustColor - 1][0], $times[$adjustColor - 1][1]));
     })
@@ -132,7 +132,7 @@ function setupCalendar() {
 
         // Create the time display div
         var $newTime = $("<div>");
-        $newTime.attr("class", "col-1 hour");
+        $newTime.attr("class", "col-2 col-lg-1 hour");
         $newTime.attr("style", "width: 100%; height: 100%; display: table")
 
         // Add the time display as a span to the div
@@ -142,7 +142,7 @@ function setupCalendar() {
 
         // Create the text entry area div
         var $newDescription = $("<div>");
-        $newDescription.attr("class", "col-10 p-0 colours");
+        $newDescription.attr("class", "col-8 col-lg-10 p-0 colours");
         $newDescription.addClass(checkMoment($times[i][0], $times[i][1]))
         $newDescription.attr("id", (i + 1));
 
@@ -158,7 +158,7 @@ function setupCalendar() {
 
         // Create the save button div
         var $newSave = $("<div>");
-        $newSave.attr("class", "col-1 saveBtn");
+        $newSave.attr("class", "col-2 col-lg-1 saveBtn");
         $newSave.attr("style", "width: 100%; height: 100%; display: table")
 
         // Craete the save icon
@@ -194,7 +194,7 @@ $(".fa-save").bind("click", function () {
 
     // Check which save button was pressed
     var $id = $(this).attr("id");
-    
+
     // Get the text area based off the id
     var $textInput = $('#input' + $id);
 
