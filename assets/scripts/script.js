@@ -7,6 +7,7 @@ var $times = [["9", "AM"], ["10", "AM"], ["11", "AM"], ["12", "PM"], ["1", "PM"]
 var $recordedEntries = [];
 var $currentHour;
 var $previousHour;
+var $currentTimeInterval;
 
 // Function to update the calendar colours when the time changes
 function updateCalendar() {
@@ -146,11 +147,8 @@ function setupCalendar() {
         $newDescription.addClass(checkMoment($times[i][0], $times[i][1]))
         $newDescription.attr("id", (i + 1));
 
-        // Create the text input area
-        var $newTextArea = $("<input>");
-        $newTextArea.attr("type", "text");
-        $newTextArea.attr("style", "width: 100%; height: 100%; border: none; background: transparent; padding: 20px;")
-        $newTextArea.attr("class", "textarea");
+        // Create the text area input
+        var $newTextArea = $("<textarea>");
         $newTextArea.attr("id", "input" + (i + 1));
 
         // Retrieve stored entries
@@ -180,34 +178,40 @@ function setupCalendar() {
     }
 }
 
-// Interval to call the displayCurrentDateTime function every second
-var $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
+// jQuery to ensure that the document has loaded before running code
+$(document).ready(function () {
+    
+    // Interval to call the displayCurrentDateTime function every second
+    $currentTimeInterval = setInterval(displayCurrentDateTime, 1000);
 
-// Check and display the current date time on page load
-displayCurrentDateTime();
+    // Check and display the current date time on page load
+    displayCurrentDateTime();
 
-// Let's get it started in here
-setupCalendar();
+    // Let's get it started in here
+    setupCalendar();
 
-// Event listeners
-$(".fa-save").bind("click", function () {
+    // Event listeners
+    $(".fa-save").bind("click", function () {
 
-    // Check which save button was pressed
-    var $id = $(this).attr("id");
+        // Check which save button was pressed
+        var $id = $(this).attr("id");
 
-    // Get the text area based off the id
-    var $textInput = $('#input' + $id);
+        // Get the text area based off the id
+        var $textInput = $('#input' + $id);
 
-    // Get the text input
-    var $trimmedText = $textInput.val().trim();
+        // Get the text input
+        var $trimmedText = $textInput.val().trim();
 
-    // Check if any data was entered, and if so save the data
-    if ($trimmedText != undefined && $id != undefined) {
+        console.log("$trimmedText: " + $trimmedText)
 
-        // Add this calender entry to array
-        addCalendarEvent($id, $trimmedText);
+        // Check if any data was entered, and if so save the data
+        if ($trimmedText != undefined && $id != undefined) {
 
-        // Add all entries to storage
-        addCalendarToStorage();
-    }
+            // Add this calender entry to array
+            addCalendarEvent($id, $trimmedText);
+
+            // Add all entries to storage
+            addCalendarToStorage();
+        }
+    })
 })
